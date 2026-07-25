@@ -1,135 +1,305 @@
 *{
-    box-sizing:border-box;
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
 }
 
 body{
-    margin:0;
-    padding:30px;
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
-    min-height:100vh;
+
+background:#edf2f7;
+
+font-family:
+
+Segoe UI,
+Roboto,
+Arial,
+sans-serif;
+
+padding:40px;
+
+color:#222;
+
 }
 
 .container{
-    max-width:1100px;
-    margin:auto;
-    background:rgba(255,255,255,0.95);
-    backdrop-filter:blur(10px);
-    border-radius:24px;
-    padding:28px;
-    box-shadow:0 20px 50px rgba(0,0,0,.2);
+
+max-width:1200px;
+
+margin:auto;
+
 }
 
-h1{
-    margin:0 0 20px;
-    color:#1f2937;
-    font-size:32px;
+.header{
+
+margin-bottom:25px;
+
+}
+
+.header h1{
+
+font-size:34px;
+
+font-weight:700;
+
+margin-bottom:8px;
+
+}
+
+.header p{
+
+color:#666;
+
+font-size:15px;
+
+}
+
+.editor{
+
+margin-bottom:18px;
+
 }
 
 textarea{
-    width:100%;
-    min-height:180px;
-    padding:18px;
-    border:2px solid #e5e7eb;
-    border-radius:18px;
-    font-size:16px;
-    resize:vertical;
-    outline:none;
-    transition:.2s;
+
+width:100%;
+
+height:220px;
+
+padding:18px;
+
+resize:vertical;
+
+border:none;
+
+outline:none;
+
+font-size:16px;
+
+line-height:1.7;
+
+border-radius:16px;
+
+background:white;
+
+box-shadow:
+
+0 10px 30px rgba(0,0,0,.08);
+
+transition:.25s;
+
 }
 
 textarea:focus{
-    border-color:#667eea;
-    box-shadow:0 0 0 4px rgba(102,126,234,.15);
+
+box-shadow:
+
+0 0 0 3px #3b82f6;
+
 }
 
-.info{
-    margin-top:12px;
-    color:#64748b;
-    font-size:14px;
+.status{
+
+margin-bottom:18px;
+
+height:22px;
+
+}
+
+#saveStatus{
+
+font-size:14px;
+
+color:#16a34a;
+
+font-weight:600;
+
 }
 
 #result{
-    margin-top:28px;
+
+display:flex;
+
+flex-direction:column;
+
+gap:15px;
+
 }
 
 .line{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-    margin-bottom:16px;
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:10px;
+
 }
 
-.box{
-    display:flex;
-    align-items:center;
-    background:white;
-    border:1px solid #e5e7eb;
-    border-radius:16px;
-    overflow:hidden;
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
-    transition:.2s;
-}
+.wordBox{
 
-.box:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 25px rgba(0,0,0,.12);
+display:flex;
+
+align-items:center;
+
+overflow:hidden;
+
+border-radius:12px;
+
+background:white;
+
+box-shadow:
+
+0 4px 15px rgba(0,0,0,.08);
+
+animation:fade .25s;
+
 }
 
 .word{
-    padding:14px 18px;
-    font-weight:600;
-    color:#111827;
+
+padding:
+
+12px
+16px;
+
+font-size:15px;
+
+white-space:nowrap;
+
 }
 
 .copy{
-    border:none;
-    border-left:1px solid #e5e7eb;
-    background:#667eea;
-    color:white;
-    padding:14px 16px;
-    cursor:pointer;
-    font-weight:600;
-    transition:.2s;
+
+border:none;
+
+background:#2563eb;
+
+color:white;
+
+padding:
+
+12px
+16px;
+
+cursor:pointer;
+
+font-size:14px;
+
+transition:.25s;
+
 }
 
 .copy:hover{
-    background:#5a67d8;
+
+background:#1d4ed8;
+
 }
 
 .copy.success{
-    background:#10b981;
+
+background:#16a34a;
+
 }
 
-.toast{
-    position:fixed;
-    top:20px;
-    right:20px;
-    background:#111827;
-    color:white;
-    padding:14px 18px;
-    border-radius:14px;
-    box-shadow:0 10px 30px rgba(0,0,0,.25);
-    transform:translateX(120%);
-    transition:.3s;
-    z-index:9999;
+#toast{
+
+position:fixed;
+
+right:25px;
+
+bottom:25px;
+
+padding:
+
+14px
+22px;
+
+background:#222;
+
+color:white;
+
+border-radius:10px;
+
+opacity:0;
+
+pointer-events:none;
+
+transform:translateY(25px);
+
+transition:.3s;
+
+font-size:15px;
+
+box-shadow:
+
+0 10px 25px rgba(0,0,0,.25);
+
+z-index:999;
+
 }
 
-.toast.show{
-    transform:translateX(0);
+#toast.show{
+
+opacity:1;
+
+transform:translateY(0);
+
 }
 
-@media(max-width:768px){
-    body{
-        padding:16px;
-    }
+@keyframes fade{
 
-    .container{
-        padding:20px;
-        border-radius:20px;
-    }
+from{
 
-    h1{
-        font-size:26px;
-    }
+opacity:0;
+
+transform:translateY(8px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+@media(max-width:700px){
+
+body{
+
+padding:15px;
+
+}
+
+.header h1{
+
+font-size:28px;
+
+}
+
+textarea{
+
+height:180px;
+
+}
+
+.word{
+
+padding:10px;
+
+font-size:14px;
+
+}
+
+.copy{
+
+padding:10px;
+
+}
+
 }
