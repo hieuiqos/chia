@@ -1,15 +1,64 @@
-<!doctype html><html lang="vi"><head><meta charset="utf-8"><title>Chia nội dung</title>
-<link rel="stylesheet" href="style.css"></head><body><div class="container">
-    <h1>📝 Tách & Copy Chia Tráng Realtime</h1>
+<!DOCTYPE html>
+<html lang="vi">
 
-    <textarea id="input" placeholder="Dán nội dung ở đây...
-Ví dụ:
-abc def
-123 456"></textarea>
+<head>
 
-    <div class="info" id="status">🔄 Tự động lưu và đồng bộ giữa các thiết bị</div>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div id="result"></div>
+    <title>Word Splitter</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>Word Splitter</h1>
+
+        <p>Dán nội dung vào ô bên dưới. Dữ liệu sẽ tự động lưu.</p>
+
+    </div>
+
+
+    <div class="editor">
+
+        <textarea
+            id="input"
+            placeholder="Dán nội dung tại đây..."
+            spellcheck="false"
+        ></textarea>
+
+    </div>
+
+
+    <div class="status">
+
+        <span id="saveStatus">
+            Đã đồng bộ
+        </span>
+
+    </div>
+
+
+    <div id="result">
+
+    </div>
+
 </div>
 
-<div class="toast" id="toast">Đã copy</div></body></html>
+
+<div id="toast">
+
+</div>
+
+
+</body>
+
+<script type="module" src="script.js"></script>
+
+</html>
