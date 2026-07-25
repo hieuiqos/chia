@@ -1,0 +1,1 @@
+Them cau hinh Firebase vao script.js, bat Firestore, deploy len GitHub Pages.
