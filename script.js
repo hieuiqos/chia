@@ -1,6 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig={apiKey:"",authDomain:"",projectId:"",storageBucket:"",messagingSenderId:"",appId:""};
+const firebaseConfig = {
+    apiKey: "AIzaSyAkaju4D7ivfI9Rj-q0zDnOL2jiTBjGxYk",
+    authDomain: "chia-cdf09.firebaseapp.com",
+    projectId: "chia-cdf09",
+    storageBucket: "chia-cdf09.firebasestorage.app",
+    messagingSenderId: "1068772307933",
+    appId: "1:1068772307933:web:741632526b391e7ad2fc34"
+  };
 const app=initializeApp(firebaseConfig),db=getFirestore(app);
 const room=new URLSearchParams(location.search).get("id")||"default";
 const ref=doc(db,"rooms",room);
