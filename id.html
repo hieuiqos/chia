@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tách nội dung và Copy</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f3f5f7;
+    padding:30px;
+}
+
+h2{
+    margin-bottom:15px;
+}
+
+textarea{
+    width:100%;
+    height:180px;
+    padding:10px;
+    font-size:16px;
+    resize:vertical;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+button.main{
+    margin-top:15px;
+    padding:10px 20px;
+    font-size:16px;
+    cursor:pointer;
+    border:none;
+    background:#1976d2;
+    color:white;
+    border-radius:8px;
+}
+
+#lineContainer{
+    margin-top:30px;
+}
+
+.line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:12px;
+}
+
+.wordBox{
+    display:flex;
+    align-items:center;
+    background:white;
+    border:1px solid #ddd;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 2px 5px rgba(0,0,0,.08);
+}
+
+.word{
+    padding:10px 14px;
+    font-size:15px;
+}
+
+.copyBtn{
+    border:none;
+    border-left:1px solid #ddd;
+    background:#4CAF50;
+    color:white;
+    padding:10px 12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.copyBtn:hover{
+    background:#43a047;
+}
+</style>
+
+</head>
+<body>
+
+<h2>Tách nội dung thành các ô</h2>
+
+<textarea id="input" placeholder="Dán nội dung vào đây..."></textarea>
+
+<br>
+
+<button class="main" onclick="splitText()">Tách nội dung</button>
+
+<div id="lineContainer"></div>
+
+<script>
+
+function splitText(){
+
+    const text=document.getElementById("input").value.trim();
+
+    const container=document.getElementById("lineContainer");
+    container.innerHTML="";
+
+    if(text==="") return;
+
+    const lines=text.split(/\r?\n/);
+
+    lines.forEach(line=>{
+
+        const row=document.createElement("div");
+        row.className="line";
+
+        const words=line.trim().split(/\s+/);
+
+        words.forEach(word=>{
+
+            if(word==="") return;
+
+            const box=document.createElement("div");
+            box.className="wordBox";
+
+            const span=document.createElement("div");
+            span.className="word";
+            span.textContent=word;
+
+            const btn=document.createElement("button");
+            btn.className="copyBtn";
+            btn.textContent="Copy";
+
+            btn.onclick=()=>{
+                navigator.clipboard.writeText(word);
+
+                btn.textContent="Đã copy ✓";
+
+                setTimeout(()=>{
+                    btn.textContent="Copy";
+                },1000);
+            };
+
+            box.appendChild(span);
+            box.appendChild(btn);
+
+            row.appendChild(box);
+
+        });
+
+        container.appendChild(row);
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
