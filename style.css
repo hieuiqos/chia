@@ -1,1 +1,135 @@
-body{font-family:Arial;margin:20px;background:#f5f5f5}textarea{width:100%;height:180px} .line{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.box{display:flex;border:1px solid #ccc;border-radius:6px;background:#fff}.word{padding:8px}.copy{padding:8px}
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    padding:30px;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    min-height:100vh;
+}
+
+.container{
+    max-width:1100px;
+    margin:auto;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(10px);
+    border-radius:24px;
+    padding:28px;
+    box-shadow:0 20px 50px rgba(0,0,0,.2);
+}
+
+h1{
+    margin:0 0 20px;
+    color:#1f2937;
+    font-size:32px;
+}
+
+textarea{
+    width:100%;
+    min-height:180px;
+    padding:18px;
+    border:2px solid #e5e7eb;
+    border-radius:18px;
+    font-size:16px;
+    resize:vertical;
+    outline:none;
+    transition:.2s;
+}
+
+textarea:focus{
+    border-color:#667eea;
+    box-shadow:0 0 0 4px rgba(102,126,234,.15);
+}
+
+.info{
+    margin-top:12px;
+    color:#64748b;
+    font-size:14px;
+}
+
+#result{
+    margin-top:28px;
+}
+
+.line{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.box{
+    display:flex;
+    align-items:center;
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 6px 20px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.box:hover{
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(0,0,0,.12);
+}
+
+.word{
+    padding:14px 18px;
+    font-weight:600;
+    color:#111827;
+}
+
+.copy{
+    border:none;
+    border-left:1px solid #e5e7eb;
+    background:#667eea;
+    color:white;
+    padding:14px 16px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.2s;
+}
+
+.copy:hover{
+    background:#5a67d8;
+}
+
+.copy.success{
+    background:#10b981;
+}
+
+.toast{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#111827;
+    color:white;
+    padding:14px 18px;
+    border-radius:14px;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+    transform:translateX(120%);
+    transition:.3s;
+    z-index:9999;
+}
+
+.toast.show{
+    transform:translateX(0);
+}
+
+@media(max-width:768px){
+    body{
+        padding:16px;
+    }
+
+    .container{
+        padding:20px;
+        border-radius:20px;
+    }
+
+    h1{
+        font-size:26px;
+    }
+}
