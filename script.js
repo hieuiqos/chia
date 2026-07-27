@@ -19,47 +19,107 @@ const input = document.getElementById("input");
 const res = document.getElementById("result");
 const status = document.getElementById("status"); // Khai báo thêm biến status
 
-function render(t) {
-    res.innerHTML = "";
-    t.split(/\r?\n/).forEach(l => {
-        const row = document.createElement("div");
-        row.className = "line";
+// ==========================================
+
+// Hàm xử lý dữ liệu nhập vào
+function processData() {
+    const inputData = document.getElementById('dataInput').value;
+    // Tách theo từng dòng bỏ qua dòng trống
+    const lines = inputData.split('\n').filter(line => line.trim() !== '');
+    const outputArea = document.getElementById('outputArea');
+    
+    outputArea.innerHTML = ''; // Xóa kết quả cũ
+
+    lines.forEach(line => {
+        // Tách dòng thành các phần tử (bằng dấu cách hoặc tab)
+        const parts = line.trim().split(/\s+/);
         
-        l.trim().split(/\s+/).filter(Boolean).forEach(w => {
-            const b = document.createElement("div");
-            b.className = "box";
-            b.innerHTML = `<span class="word">${w}</span><button class="copy">Copy</button>`;
-            
-            const copyBtn = b.querySelector("button");
-            copyBtn.onclick = () => {
-                navigator.clipboard.writeText(w);
-                // Hiệu ứng UX nhỏ khi copy
-                copyBtn.textContent = "Đã copy!";
-                copyBtn.style.color = "#10b981"; 
-                setTimeout(() => {
-                    copyBtn.textContent = "Copy";
-                    copyBtn.style.color = "";
-                }, 1000);
-            };
-            row.appendChild(b);
-        });
-        res.appendChild(row);
+        if (parts.length >= 4) {
+            const id = parts[0];
+            const text1 = parts[1];
+            const text2 = parts[2];
+            const secret = parts[3]; // Mã base32 secret của 2FA
+
+            const row = document.createElement('div');
+            row.className = 'data-row';
+
+            // 1. Cột ID (Không có nút copy, đứng đầu dòng)
+            row.innerHTML += `
+                <div class="item-id">${id}</div>
+            `;
+
+            // 2. Cột Text 1 (Có nút copy)
+            row.innerHTML += createCopyableItem(text1);
+
+            // 3. Cột Text 2 (Có nút copy)
+            row.innerHTML += createCopyableItem(text2);
+
+            // 4. Cột Mã 2FA (Tự sinh mã 6 số và có nút copy)
+            const totpId = 'totp-' + Math.random().toString(36).substr(2, 9);
+            row.innerHTML += `
+                <div class="item-box">
+                    <span id="${totpId}" class="item-value totp-code" data-secret="${secret}">------</span>
+                    <button class="btn-copy" onclick="copyText(document.getElementById('${totpId}').innerText, this)">Copy</button>
+                </div>
+            `;
+
+            outputArea.appendChild(row);
+        }
+    });
+
+    // Cập nhật mã 2FA ngay lập tức sau khi render
+    updateAllTOTPCodes();
+}
+
+// Hàm hỗ trợ tạo khối HTML cho dữ liệu cần Copy
+function createCopyableItem(text) {
+    return `
+        <div class="item-box">
+            <span class="item-value">${text}</span>
+            <button class="btn-copy" onclick="copyText('${text}', this)">Copy</button>
+        </div>
+    `;
+}
+
+// Hàm copy vào clipboard
+function copyText(text, btnElement) {
+    navigator.clipboard.writeText(text).then(() => {
+        const originalText = btnElement.innerText;
+        btnElement.innerText = "Đã Copy!";
+        btnElement.style.backgroundColor = "#ffc107";
+        btnElement.style.color = "#000";
+        
+        // Trả lại trạng thái cũ sau 1.5 giây
+        setTimeout(() => {
+            btnElement.innerText = originalText;
+            btnElement.style.backgroundColor = "#28a745";
+            btnElement.style.color = "#fff";
+        }, 1500);
+    }).catch(err => {
+        console.error('Lỗi khi copy: ', err);
     });
 }
 
-onSnapshot(ref, s => {
-    if (s.exists()) {
-        const t = s.data().text || "";
-        input.value = t;
-        render(t);
-    }
-});
-
-document.getElementById("save").onclick = async () => {
-    await setDoc(ref, { text: input.value });
-    render(input.value);
+// Hàm tính toán và cập nhật mã 2FA 6 số
+function updateAllTOTPCodes() {
+    const totpElements = document.querySelectorAll('.totp-code');
     
-    // Cập nhật trạng thái
-    status.textContent = "Đã lưu thành công!";
-    setTimeout(() => status.textContent = "", 3000);
-};
+    totpElements.forEach(el => {
+        const secret = el.getAttribute('data-secret');
+        try {
+            // Sử dụng thư viện OTPAuth
+            let totp = new OTPAuth.TOTP({
+                algorithm: "SHA1",
+                digits: 6,
+                period: 30,
+                secret: secret // Truyền secret key vào đây
+            });
+            el.innerText = totp.generate();
+        } catch (error) {
+            el.innerText = "Lỗi Secret";
+        }
+    });
+}
+
+// Thiết lập vòng lặp cập nhật mã 2FA mỗi 1 giây (để đồng bộ thời gian)
+setInterval(updateAllTOTPCodes, 1000);
