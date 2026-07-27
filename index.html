@@ -3,25 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Công cụ tạo mã 2FA</title>
+    <title>Tool Xử Lý 2FA</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Thư viện tạo mã TOTP (2FA) client-side -->
+    <!-- Thư viện xử lý mã 2FA tự động -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/otpauth/9.2.2/otpauth.umd.min.js"></script>
-    
-    <!-- (Tùy chọn) Khai báo thư viện Firebase của bạn tại đây nếu cần -->
 </head>
 <body>
-    <div class="container">
-        <h2>Nhập dữ liệu của bạn</h2>
-        <p>Mỗi dòng dán vào theo định dạng: <code>[id] [text] [text] [2fa_secret]</code> (cách nhau bởi dấu cách hoặc tab)</p>
-        
-        <textarea id="dataInput" rows="6" placeholder="Ví dụ:&#10;1 user1 pass1 JBSWY3DPEHPK3PXP&#10;2 user2 pass2 JBSWY3DPEHPK3PXQ"></textarea>
-        <button onclick="processData()" class="btn-process">Xử lý dữ liệu</button>
-        
-        <div id="outputArea">
-            <!-- Kết quả sẽ hiển thị ở đây -->
-        </div>
-    </div>
+    <h2>Nhập dữ liệu của bạn</h2>
+    <p>Định dạng: <strong>[id] [text] [text] [code 2fa]</strong></p>
+    <textarea id="dataInput" rows="8" placeholder="Dán các dòng dữ liệu vào đây..."></textarea>
+    <button id="processBtn" class="primary-btn">Hiển thị Giao diện</button>
+    
+    <div id="output"></div>
 
     <script src="script.js"></script>
 </body>
