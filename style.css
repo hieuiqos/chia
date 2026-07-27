@@ -171,3 +171,67 @@ button#save:hover {
 .copy:hover {
     background-color: #eff6ff;
 }
+/* Thiết kế cho bộ đếm giây mã 2FA */
+.timer-badge {
+    font-size: 0.75rem;
+    background-color: #d1fae5; /* Nền xanh nhạt */
+    color: #10b981; /* Chữ xanh đậm */
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    min-width: 32px;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* 📱 Responsive: Tối ưu cho màn hình điện thoại (Dưới 640px) */
+@media (max-width: 640px) {
+    body {
+        padding: 1rem 0.5rem; /* Giảm khoảng cách lề ngoài */
+        font-size: 0.9rem; /* Giảm cỡ chữ tổng thể */
+    }
+    
+    .container {
+        padding: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.25rem;
+    }
+    
+    header p {
+        font-size: 0.85rem;
+    }
+    
+    textarea {
+        font-size: 0.85rem;
+        height: 120px;
+        padding: 0.75rem;
+    }
+    
+    .line {
+        gap: 0.4rem; /* Giảm khoảng cách giữa các ô */
+        padding-bottom: 1rem;
+    }
+    
+    .word {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.8rem; /* Chữ trong ô dữ liệu bé lại */
+    }
+    
+    .copy {
+        padding: 0.35rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    button#save {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .timer-badge {
+        font-size: 0.7rem;
+        padding: 0.1rem 0.3rem;
+        min-width: 28px;
+    }
+}
