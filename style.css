@@ -187,7 +187,7 @@ button#save:hover {
 /* 📱 Responsive: Tối ưu cho màn hình điện thoại (Dưới 640px) */
 @media (max-width: 640px) {
     body {
-        padding: 1rem 0.5rem; /* Giảm khoảng cách lề ngoài */
+        padding: 1rem 0.1rem; /* Giảm khoảng cách lề ngoài */
         font-size: 0.5rem; /* Giảm cỡ chữ tổng thể */
     }
     
@@ -210,13 +210,13 @@ button#save:hover {
     }
     
     .line {
-        gap: 0.4rem; /* Giảm khoảng cách giữa các ô */
+        gap: 0.2rem; /* Giảm khoảng cách giữa các ô */
         padding-bottom: 1rem;
     }
     
     .word {
         padding: 0.35rem 0.5rem;
-        font-size: 0.5rem; /* Chữ trong ô dữ liệu bé lại */
+        font-size: 0.2rem; /* Chữ trong ô dữ liệu bé lại */
     }
     
     .copy {
