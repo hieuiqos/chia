@@ -15,9 +15,6 @@ const db = getFirestore(app);
 
 const room = new URLSearchParams(location.search).get("id") || "default";
 const ref = doc(db, "rooms", room);
-const input = document.getElementById("input");
-const res = document.getElementById("result");
-const status = document.getElementById("status"); // Khai báo thêm biến status
 
 document.getElementById('processBtn').addEventListener('click', () => {
     const input = document.getElementById('dataInput').value;
