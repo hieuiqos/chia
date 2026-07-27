@@ -135,3 +135,4 @@ function updateTOTP(totpInstance, displayElement, copyBtn, countdownElement) {
     const remaining = 30 - (epoch % 30);
     countdownElement.textContent = `(${remaining}s)`;
 }
+
