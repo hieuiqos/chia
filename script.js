@@ -123,3 +123,4 @@ function updateAllTOTPCodes() {
 
 // Thiết lập vòng lặp cập nhật mã 2FA mỗi 1 giây (để đồng bộ thời gian)
 setInterval(updateAllTOTPCodes, 1000);
+
