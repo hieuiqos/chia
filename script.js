@@ -1,8 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { authenticator } from "https://cdn.jsdelivr.net/npm/otplib@12.0.1/+esm";
-
-// ================= Firebase (GIỮ NGUYÊN) =================
 
 const firebaseConfig = {
     apiKey: "AIzaSyAkaju4D7ivfI9Rj-q0zDnOL2jiTBjGxYk",
@@ -12,175 +9,116 @@ const firebaseConfig = {
     messagingSenderId: "1068772307933",
     appId: "1:1068772307933:web:741632526b391e7ad2fc34"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const room = new URLSearchParams(location.search).get("id") || "default";
 const ref = doc(db, "rooms", room);
-
 const input = document.getElementById("input");
 const res = document.getElementById("result");
 const status = document.getElementById("status");
 
-// ================= Copy =================
-
-function copyText(text, btn) {
-    navigator.clipboard.writeText(text);
-
-    const old = btn.textContent;
-    btn.textContent = "✓";
-
-    setTimeout(() => {
-        btn.textContent = old;
-    }, 800);
+// Hàm Helper để tạo mã 2FA
+function get2FACode(secretStr) {
+    try {
+        // Xoá bỏ ký tự không thuộc bảng mã Base32 phòng trường hợp lỗi
+        const cleanSecret = secretStr.replace(/[^A-Z2-7]/gi, "");
+        const totp = new OTPAuth.TOTP({ secret: OTPAuth.Secret.fromBase32(cleanSecret) });
+        return totp.generate();
+    } catch (e) {
+        return "Lỗi mã";
+    }
 }
 
-// ================= Render =================
+// Hàm khởi tạo từng Box dữ liệu riêng biệt
+function createDataBox(content, hasCopyButton, is2FA = false) {
+    const b = document.createElement("div");
+    b.className = "box";
+    
+    const wordSpan = document.createElement("span");
+    wordSpan.className = "word";
+    
+    if (is2FA) {
+        wordSpan.classList.add("totp-code");
+        wordSpan.setAttribute("data-secret", content);
+        wordSpan.textContent = get2FACode(content);
+    } else {
+        wordSpan.textContent = content;
+    }
+    
+    b.appendChild(wordSpan);
 
-function render(text) {
+    if (hasCopyButton) {
+        const copyBtn = document.createElement("button");
+        copyBtn.className = "copy";
+        copyBtn.textContent = "Copy";
+        copyBtn.onclick = () => {
+            navigator.clipboard.writeText(wordSpan.textContent);
+            copyBtn.textContent = "Đã copy!";
+            copyBtn.style.color = "#10b981"; 
+            setTimeout(() => {
+                copyBtn.textContent = "Copy";
+                copyBtn.style.color = "";
+            }, 1000);
+        };
+        b.appendChild(copyBtn);
+    } else {
+        // Xóa viền phải nếu không có nút copy đứng cạnh
+        wordSpan.style.borderRight = "none";
+    }
+    
+    return b;
+}
 
+function render(t) {
     res.innerHTML = "";
-
-    const rows = [];
-
-    text.split(/\r?\n/).forEach(line => {
-
-        line = line.trim();
-
-        if (!line) return;
-
-        const parts = line.split(/\s+/);
-
-        const id = parts[0] || "";
-        const text1 = parts[1] || "";
-        const text2 = parts[2] || "";
-        const secret = parts[3] || "";
+    t.split(/\r?\n/).forEach(l => {
+        const parts = l.trim().split(/\s+/).filter(Boolean);
+        if (parts.length === 0) return;
 
         const row = document.createElement("div");
         row.className = "line";
-
-        // ID
-        const idCell = document.createElement("div");
-        idCell.className = "cell id";
-        idCell.textContent = id;
-
-        // TEXT1
-        const text1Cell = document.createElement("div");
-        text1Cell.className = "cell";
-
-        text1Cell.innerHTML = `
-            <span>${text1}</span>
-            <button class="copy">Copy</button>
-        `;
-
-        text1Cell.querySelector("button").onclick = e => {
-            copyText(text1, e.target);
-        };
-
-        // TEXT2
-        const text2Cell = document.createElement("div");
-        text2Cell.className = "cell";
-
-        text2Cell.innerHTML = `
-            <span>${text2}</span>
-            <button class="copy">Copy</button>
-        `;
-
-        text2Cell.querySelector("button").onclick = e => {
-            copyText(text2, e.target);
-        };
-
-        // 2FA
-        const codeCell = document.createElement("div");
-        codeCell.className = "cell totp";
-
-        const codeSpan = document.createElement("span");
-        const btn = document.createElement("button");
-
-        btn.className = "copy";
-        btn.textContent = "Copy";
-
-        btn.onclick = () => {
-            copyText(codeSpan.textContent, btn);
-        };
-
-        codeCell.appendChild(codeSpan);
-        codeCell.appendChild(btn);
-
-        row.appendChild(idCell);
-        row.appendChild(text1Cell);
-        row.appendChild(text2Cell);
-        row.appendChild(codeCell);
-
+        
+        parts.forEach((w, index) => {
+            let box;
+            if (index === 0) {
+                // Vị trí [id]: Không có nút copy
+                box = createDataBox(w, false, false);
+            } else if (index === 3) {
+                // Vị trí [code 2fa]: Có nút copy và biến đổi thành OTP 6 số
+                box = createDataBox(w, true, true);
+            } else {
+                // Vị trí [text] hoặc các dữ liệu khác: Có nút copy
+                box = createDataBox(w, true, false);
+            }
+            row.appendChild(box);
+        });
         res.appendChild(row);
-
-        rows.push({
-            secret,
-            codeSpan
-        });
-
     });
-
-    function updateCodes() {
-
-        rows.forEach(item => {
-
-            if (!item.secret) {
-                item.codeSpan.textContent = "------";
-                return;
-            }
-
-            try {
-                item.codeSpan.textContent = authenticator.generate(item.secret);
-            } catch {
-
-                item.codeSpan.textContent = "ERROR";
-
-            }
-
-        });
-
-    }
-
-    updateCodes();
-
-    if (window.totpTimer) {
-        clearInterval(window.totpTimer);
-    }
-
-    window.totpTimer = setInterval(updateCodes, 1000);
-
 }
 
-// ================= Firebase =================
+// Tự động cập nhật lại các mã 2FA sau mỗi 1 giây
+setInterval(() => {
+    document.querySelectorAll('.totp-code').forEach(el => {
+        const secret = el.getAttribute('data-secret');
+        if (secret) {
+            el.textContent = get2FACode(secret);
+        }
+    });
+}, 1000);
 
-onSnapshot(ref, snapshot => {
-
-    if (!snapshot.exists()) return;
-
-    const text = snapshot.data().text || "";
-
-    input.value = text;
-
-    render(text);
-
+onSnapshot(ref, s => {
+    if (s.exists()) {
+        const t = s.data().text || "";
+        input.value = t;
+        render(t);
+    }
 });
 
-// ================= Save =================
-
 document.getElementById("save").onclick = async () => {
-
-    await setDoc(ref, {
-        text: input.value
-    });
-
+    await setDoc(ref, { text: input.value });
     render(input.value);
-
+    
     status.textContent = "Đã lưu thành công!";
-
-    setTimeout(() => {
-        status.textContent = "";
-    }, 3000);
-
+    setTimeout(() => status.textContent = "", 3000);
 };
