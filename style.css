@@ -1,103 +1,88 @@
-* {
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
-
 body {
-    background-color: #f4f7f6;
+    font-family: Arial, sans-serif;
     padding: 20px;
+    background-color: #f4f6f9;
 }
-
-.container {
-    max-width: 1000px;
-    margin: 0 auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
 textarea {
     width: 100%;
+    margin-bottom: 15px;
     padding: 10px;
-    margin-bottom: 10px;
+    border-radius: 6px;
     border: 1px solid #ccc;
-    border-radius: 4px;
-    resize: vertical;
+    font-family: monospace;
 }
-
-.btn-process {
-    background-color: #007bff;
-    color: white;
+.primary-btn {
     padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-bottom: 20px;
-}
-
-.btn-process:hover {
-    background-color: #0056b3;
-}
-
-/* Định dạng từng dòng (Row) */
-.data-row {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 15px;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
-}
-
-.data-row:last-child {
-    border-bottom: none;
-}
-
-/* Định dạng từng ô dữ liệu (Item) */
-.item-box {
-    display: flex;
-    align-items: center;
-    background: #f8f9fa;
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #e2e2e2;
-}
-
-.item-id {
-    font-weight: bold;
-    color: #333;
-    min-width: 30px;
-    background: transparent;
-    border: none;
-}
-
-.item-value {
-    margin-right: 10px;
-}
-
-.totp-code {
-    color: #d9534f;
-    font-weight: bold;
-    letter-spacing: 2px;
-}
-
-.btn-copy {
     background-color: #28a745;
     color: white;
     border: none;
-    padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 20px;
 }
-
-.btn-copy:hover {
+.primary-btn:hover {
     background-color: #218838;
 }
 
-.btn-copy:active {
-    background-color: #1e7e34;
+/* Sắp xếp mọi thứ lên 1 dòng */
+.data-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
+.data-id {
+    font-weight: bold;
+    color: #333;
+    min-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.copy-btn {
+    padding: 6px 12px;
+    cursor: pointer;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+.copy-btn:hover {
+    background: #0056b3;
+}
+.copy-btn.copied {
+    background: #17a2b8 !important;
+}
+
+/* Khu vực 2FA */
+.totp-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto; /* Đẩy 2FA về bên phải */
+}
+
+.totp-code {
+    font-family: monospace;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #d9534f;
+    letter-spacing: 2px;
+}
+
+.countdown {
+    font-size: 0.85em;
+    color: #666;
+    width: 35px;
+}
