@@ -216,7 +216,7 @@ button#save:hover {
     
     .word {
         padding: 0.35rem 0.5rem;
-        font-size: 0.2rem; /* Chữ trong ô dữ liệu bé lại */
+        font-size: 0.5rem; /* Chữ trong ô dữ liệu bé lại */
     }
     
     .copy {
