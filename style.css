@@ -188,7 +188,7 @@ button#save:hover {
 @media (max-width: 640px) {
     body {
         padding: 1rem 0.5rem; /* Giảm khoảng cách lề ngoài */
-        font-size: 0.9rem; /* Giảm cỡ chữ tổng thể */
+        font-size: 0.5rem; /* Giảm cỡ chữ tổng thể */
     }
     
     .container {
@@ -216,7 +216,7 @@ button#save:hover {
     
     .word {
         padding: 0.35rem 0.5rem;
-        font-size: 0.8rem; /* Chữ trong ô dữ liệu bé lại */
+        font-size: 0.5rem; /* Chữ trong ô dữ liệu bé lại */
     }
     
     .copy {
