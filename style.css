@@ -1,169 +1,3 @@
-:root {
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --bg-color: #f1f5f9;
-    --surface: #ffffff;
-    --text-main: #1e293b;
-    --text-muted: #64748b;
-    --border: #e2e8f0;
-    --radius: 8px;
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    line-height: 1.6;
-    padding: 2rem 1rem;
-}
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: var(--surface);
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-}
-
-header {
-    margin-bottom: 1.5rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    color: var(--text-main);
-}
-
-header p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
-
-.input-section {
-    margin-bottom: 2rem;
-}
-
-textarea {
-    width: 100%;
-    height: 160px;
-    padding: 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: inherit;
-    font-size: 1rem;
-    resize: vertical;
-    transition: all 0.2s ease;
-    background-color: #f8fafc;
-}
-
-textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-    background-color: var(--surface);
-}
-
-.actions {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-button#save {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background-color: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.6rem 1.25rem;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-button#save:hover {
-    background-color: var(--primary-hover);
-}
-
-#status {
-    color: #10b981;
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-/* Khu vực hiển thị kết quả */
-#result {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-}
-
-.line {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    padding-bottom: 1.25rem;
-    border-bottom: 1px dashed var(--border);
-}
-
-.line:last-child {
-    border-bottom: none;
-}
-
-.box {
-    display: flex;
-    align-items: stretch;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-    overflow: hidden;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.box:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-}
-
-.word {
-    padding: 0.5rem 0.75rem;
-    font-weight: 500;
-    background-color: #f8fafc;
-    border-right: 1px solid var(--border);
-}
-
-.copy {
-    padding: 0.5rem 0.75rem;
-    background: transparent;
-    border: none;
-    color: var(--primary);
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.copy:hover {
-    background-color: #eff6ff;
-}
-
-
-
-
 * {
     box-sizing: border-box;
     font-family: Arial, sans-serif;
@@ -172,11 +6,10 @@ button#save:hover {
 body {
     background-color: #f4f7f6;
     padding: 20px;
-    margin: 0;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 1000px;
     margin: 0 auto;
     background: #fff;
     padding: 20px;
@@ -187,16 +20,16 @@ body {
 textarea {
     width: 100%;
     padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     resize: vertical;
-    margin-bottom: 10px;
 }
 
-#processBtn {
-    padding: 10px 15px;
+.btn-process {
     background-color: #007bff;
     color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -204,84 +37,66 @@ textarea {
     margin-bottom: 20px;
 }
 
-#processBtn:hover {
+.btn-process:hover {
     background-color: #0056b3;
 }
 
-.header-labels {
-    display: grid;
-    grid-template-columns: 1fr 2fr 2fr 1.5fr;
-    gap: 15px;
-    font-weight: bold;
-    color: #555;
-    padding: 10px;
-    border-bottom: 2px solid #ddd;
-    margin-bottom: 10px;
-}
-
-/* Định dạng một dòng */
-.row {
-    display: grid;
-    grid-template-columns: 1fr 2fr 2fr 1.5fr;
-    gap: 15px;
-    align-items: center;
-    padding: 10px;
-    background: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.cell {
+/* Định dạng từng dòng (Row) */
+.data-row {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background: #fff;
-    padding: 5px 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    overflow: hidden;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
 }
 
-.cell span {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.data-row:last-child {
+    border-bottom: none;
+}
+
+/* Định dạng từng ô dữ liệu (Item) */
+.item-box {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #e2e2e2;
+}
+
+.item-id {
+    font-weight: bold;
+    color: #333;
+    min-width: 30px;
+    background: transparent;
+    border: none;
+}
+
+.item-value {
     margin-right: 10px;
 }
 
-.id-cell {
-    background: transparent;
-    border: none;
+.totp-code {
+    color: #d9534f;
     font-weight: bold;
-    color: #333;
-    justify-content: flex-start;
+    letter-spacing: 2px;
 }
 
-/* Nút copy */
-.copy-btn {
+.btn-copy {
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 4px;
     padding: 4px 8px;
+    border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
-    min-width: 50px;
 }
 
-.copy-btn:hover {
+.btn-copy:hover {
     background-color: #218838;
 }
 
-.copy-btn:active {
+.btn-copy:active {
     background-color: #1e7e34;
-}
-
-/* Nút copy của riêng 2FA */
-.tfa-btn {
-    background-color: #ff9800;
-}
-.tfa-btn:hover {
-    background-color: #e68a00;
 }
