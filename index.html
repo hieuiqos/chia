@@ -3,38 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trình xử lý 2FA & Data</title>
+    <title>Công cụ tạo mã 2FA</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Nạp thư viện OTPAuth để tạo mã 2FA 6 số -->
+    <!-- Thư viện tạo mã TOTP (2FA) client-side -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/otpauth/9.2.2/otpauth.umd.min.js"></script>
-
-    <!-- ========================================== -->
-    <!-- GIỮ NGUYÊN CÁC SCRIPT FIREBASE TỪ chia-noi-dung.zip Ở ĐÂY -->
-    <!-- Ví dụ: 
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.x.x/firebase-firestore-compat.js"></script>
-    -->
-    <!-- ========================================== -->
+    
+    <!-- (Tùy chọn) Khai báo thư viện Firebase của bạn tại đây nếu cần -->
 </head>
 <body>
     <div class="container">
-        <h2>Công cụ phân giải dữ liệu & 2FA</h2>
-        <p>Paste nội dung vào đây (Phân cách bằng dấu <b>|</b>, <b>Tab</b> hoặc <b>Khoảng trắng</b>):</p>
-        <textarea id="inputData" rows="6" placeholder="Ví dụ:&#10;ID123 | text_1 | text_2 | JBSWY3DPEHPK3PXP"></textarea>
-        <button id="processBtn" onclick="processData()">Hiển thị kết quả</button>
+        <h2>Nhập dữ liệu của bạn</h2>
+        <p>Mỗi dòng dán vào theo định dạng: <code>[id] [text] [text] [2fa_secret]</code> (cách nhau bởi dấu cách hoặc tab)</p>
         
-        <div class="header-labels">
-            <span>[ ID ]</span>
-            <span>[ Text 1 ]</span>
-            <span>[ Text 2 ]</span>
-            <span>[ Code 2FA ]</span>
+        <textarea id="dataInput" rows="6" placeholder="Ví dụ:&#10;1 user1 pass1 JBSWY3DPEHPK3PXP&#10;2 user2 pass2 JBSWY3DPEHPK3PXQ"></textarea>
+        <button onclick="processData()" class="btn-process">Xử lý dữ liệu</button>
+        
+        <div id="outputArea">
+            <!-- Kết quả sẽ hiển thị ở đây -->
         </div>
-        
-        <div id="output"></div>
     </div>
 
-    <!-- Script xử lý chính -->
     <script src="script.js"></script>
 </body>
 </html>
