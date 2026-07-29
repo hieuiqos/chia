@@ -177,13 +177,21 @@ button#save:hover {
 .frame-content {
     display: flex;
     gap: 0.75rem;
-    flex-wrap: nowrap; 
-    overflow-x: auto;
+    flex-wrap: wrap; /* Chuyển nowrap thành wrap để cho phép rớt dòng */
     padding-bottom: 0.5rem;
 }
 
 /* Cập nhật lại responsive cho di động */
 @media (max-width: 640px) {
+    .frame-content {
+        gap: 0.5rem; /* Giảm khoảng cách giữa các ô trên mobile */
+    }
+    
+    .box {
+        flex-grow: 1; /* Cho phép các ô tự động giãn rộng để lấp đầy phần trống khi rớt dòng */
+        min-width: calc(50% - 0.5rem); /* Để ít nhất 2 ô nằm trên cùng 1 dòng, nếu quá to sẽ tự nhảy xuống dòng tiếp */
+    }
+    
     .frame {
         padding: 0.75rem;
         margin-bottom: 1rem;
@@ -201,10 +209,6 @@ button#save:hover {
 
     .frame-title {
         font-size: 0.95rem;
-    }
-
-    .frame-content {
-        gap: 0.2rem;
     }
 }
 .box {
