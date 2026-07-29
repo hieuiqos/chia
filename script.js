@@ -18,7 +18,8 @@ const input = document.getElementById("input");
 const res = document.getElementById("result");
 const status = document.getElementById("status");
 
-// Hàm tạo mã 2FA
+let currentCheckedIds = []; // Mảng lưu trữ các ID đã được check đồng bộ qua Firebase
+
 function get2FACode(secretStr) {
     try {
         const cleanSecret = secretStr.replace(/[^A-Z2-7]/gi, "");
@@ -29,12 +30,10 @@ function get2FACode(secretStr) {
     }
 }
 
-// Hàm khởi tạo từng Box dữ liệu
 function createDataBox(content, hasCopyButton, is2FA = false) {
     const b = document.createElement("div");
     b.className = "box";
     
-    // Đánh dấu box 2FA để update mỗi giây
     if (is2FA) {
         b.classList.add("box-2fa");
         b.setAttribute("data-secret", content);
@@ -43,20 +42,15 @@ function createDataBox(content, hasCopyButton, is2FA = false) {
     const wordSpan = document.createElement("span");
     wordSpan.className = "word";
     
-    let codeSpan; // Biến lưu trữ riêng phần text mã code để chép
+    let codeSpan; 
 
     if (is2FA) {
-        // Cấu hình linh hoạt để chứa mã code + đồng hồ đếm
-        wordSpan.style.display = "flex";
-        wordSpan.style.alignItems = "center";
         wordSpan.style.gap = "6px";
 
-        // Thêm mã 2FA
         codeSpan = document.createElement("span");
         codeSpan.className = "code-text";
         codeSpan.textContent = get2FACode(content);
 
-        // Thêm đếm ngược
         const timerSpan = document.createElement("span");
         timerSpan.className = "timer-badge";
         const timeLeft = 30 - (Math.floor(Date.now() / 1000) % 30);
@@ -75,7 +69,6 @@ function createDataBox(content, hasCopyButton, is2FA = false) {
         copyBtn.className = "copy";
         copyBtn.textContent = "Copy";
         copyBtn.onclick = () => {
-            // Nếu là 2FA thì chỉ chép mã code, ngược lại thì chép toàn bộ text content
             const textToCopy = is2FA ? codeSpan.textContent : content;
             navigator.clipboard.writeText(textToCopy);
             
@@ -87,119 +80,112 @@ function createDataBox(content, hasCopyButton, is2FA = false) {
             }, 1000);
         };
         b.appendChild(copyBtn);
-    } else {
-        wordSpan.style.borderRight = "none";
     }
     
     return b;
 }
 
-function render(t) {
+// Render dữ liệu kết hợp với trạng thái Checkbox từ Firebase
+function render(t, checkedIds = []) {
     res.innerHTML = "";
     t.split(/\r?\n/).forEach(l => {
         const parts = l.trim().split(/\s+/).filter(Boolean);
         if (parts.length === 0) return;
 
-        // Tạo khung chính (Frame)
         const frame = document.createElement("div");
         frame.className = "frame";
 
-        // Tạo phần Header của khung (chứa checkbox và ID)
         const header = document.createElement("div");
         header.className = "frame-header";
 
-        // Tạo ô Checkbox
+        const accountId = parts[0]; // ID tài khoản
+
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.className = "move-checkbox";
         
-        // Sự kiện khi bấm checkbox -> Chuyển khung xuống cuối cùng
-        checkbox.addEventListener("change", function() {
+        // Kiểm tra xem ID này có nằm trong danh sách đã check trên Firebase không
+        if (checkedIds.includes(accountId)) {
+            checkbox.checked = true;
+            frame.classList.add("checked-frame");
+        }
+        
+        // Bắt sự kiện khi người dùng click checkbox
+        checkbox.addEventListener("change", async function() {
             if (this.checked) {
-                // Thêm class để tạo hiệu ứng mờ đi một chút
                 frame.classList.add("checked-frame");
-                // setTimeout để tạo độ trễ nhỏ giúp người dùng nhìn thấy hiệu ứng click
-                setTimeout(() => {
-                    // appendChild sẽ tự động gỡ thẻ này ở vị trí hiện tại và nhét xuống cuối
-                    res.appendChild(frame);
-                }, 200); 
+                if (!currentCheckedIds.includes(accountId)) {
+                    currentCheckedIds.push(accountId);
+                }
             } else {
                 frame.classList.remove("checked-frame");
+                currentCheckedIds = currentCheckedIds.filter(id => id !== accountId);
             }
+            
+            // Lưu trạng thái Checkbox mới lên Firebase để thiết bị khác cũng nhận được
+            await setDoc(ref, { text: input.value, checkedIds: currentCheckedIds }, { merge: true });
         });
 
-        // Tạo Tiêu đề (chính là [id] - phần tử đầu tiên)
         const title = document.createElement("span");
         title.className = "frame-title";
-        title.textContent = parts[0]; // Lấy [id]
+        title.textContent = accountId;
 
         header.appendChild(checkbox);
         header.appendChild(title);
 
-        // Tạo phần chứa nội dung còn lại ([tk], [mk], [2fa])
         const content = document.createElement("div");
         content.className = "frame-content";
         
-        // Duyệt các phần tử còn lại (bỏ qua phần tử 0 là ID)
         for (let index = 1; index < parts.length; index++) {
             let w = parts[index];
-            let box;
-            if (index === 3) {
-                // Vị trí [code 2fa]
-                box = createDataBox(w, true, true);
-            } else {
-                // Vị trí [text] bình thường
-                box = createDataBox(w, true, false);
-            }
+            let box = (index === 3) ? createDataBox(w, true, true) : createDataBox(w, true, false);
             content.appendChild(box);
         }
 
-        // Ráp nối các thành phần lại
         frame.appendChild(header);
         frame.appendChild(content);
         res.appendChild(frame);
     });
 }
 
-// Vòng lặp cập nhật đếm ngược và mã sau mỗi 1 giây
+// Cập nhật 2FA mỗi giây
 setInterval(() => {
-    // Mã TOTP cập nhật mỗi chu kỳ 30s so với giờ hệ thống
     const timeLeft = 30 - (Math.floor(Date.now() / 1000) % 30);
-    
     document.querySelectorAll('.box-2fa').forEach(el => {
         const secret = el.getAttribute('data-secret');
         const codeSpan = el.querySelector('.code-text');
         const timerSpan = el.querySelector('.timer-badge');
         
-        if (secret && codeSpan) {
-            codeSpan.textContent = get2FACode(secret);
-        }
+        if (secret && codeSpan) codeSpan.textContent = get2FACode(secret);
         
         if (timerSpan) {
             timerSpan.textContent = `${timeLeft}s`;
-            // Tạo hiệu ứng đỏ cảnh báo nếu sắp hết hạn (< 5s)
             if (timeLeft <= 5) {
-                timerSpan.style.backgroundColor = '#fee2e2'; // Nền đỏ nhạt
-                timerSpan.style.color = '#ef4444'; // Chữ đỏ
+                timerSpan.style.backgroundColor = '#fee2e2';
+                timerSpan.style.color = '#ef4444';
             } else {
-                timerSpan.style.backgroundColor = '#d1fae5'; // Nền xanh nhạt
-                timerSpan.style.color = '#10b981'; // Chữ xanh
+                timerSpan.style.backgroundColor = '#d1fae5';
+                timerSpan.style.color = '#10b981';
             }
         }
     });
 }, 1000);
 
+// Lắng nghe Firebase realtime
 onSnapshot(ref, s => {
     if (s.exists()) {
-        const t = s.data().text || "";
+        const data = s.data();
+        const t = data.text || "";
+        currentCheckedIds = data.checkedIds || []; // Nhận danh sách checkedIds từ Firebase
+        
         input.value = t;
-        render(t);
+        render(t, currentCheckedIds);
     }
 });
 
+// Nút Update
 document.getElementById("save").onclick = async () => {
-    await setDoc(ref, { text: input.value });
-    render(input.value);
+    await setDoc(ref, { text: input.value, checkedIds: currentCheckedIds }, { merge: true });
     
     status.textContent = "Đã lưu thành công!";
     setTimeout(() => status.textContent = "", 3000);
