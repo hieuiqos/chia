@@ -100,24 +100,64 @@ function render(t) {
         const parts = l.trim().split(/\s+/).filter(Boolean);
         if (parts.length === 0) return;
 
-        const row = document.createElement("div");
-        row.className = "line";
+        // Tạo khung chính (Frame)
+        const frame = document.createElement("div");
+        frame.className = "frame";
+
+        // Tạo phần Header của khung (chứa checkbox và ID)
+        const header = document.createElement("div");
+        header.className = "frame-header";
+
+        // Tạo ô Checkbox
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.className = "move-checkbox";
         
-        parts.forEach((w, index) => {
+        // Sự kiện khi bấm checkbox -> Chuyển khung xuống cuối cùng
+        checkbox.addEventListener("change", function() {
+            if (this.checked) {
+                // Thêm class để tạo hiệu ứng mờ đi một chút
+                frame.classList.add("checked-frame");
+                // setTimeout để tạo độ trễ nhỏ giúp người dùng nhìn thấy hiệu ứng click
+                setTimeout(() => {
+                    // appendChild sẽ tự động gỡ thẻ này ở vị trí hiện tại và nhét xuống cuối
+                    res.appendChild(frame);
+                }, 200); 
+            } else {
+                frame.classList.remove("checked-frame");
+            }
+        });
+
+        // Tạo Tiêu đề (chính là [id] - phần tử đầu tiên)
+        const title = document.createElement("span");
+        title.className = "frame-title";
+        title.textContent = parts[0]; // Lấy [id]
+
+        header.appendChild(checkbox);
+        header.appendChild(title);
+
+        // Tạo phần chứa nội dung còn lại ([tk], [mk], [2fa])
+        const content = document.createElement("div");
+        content.className = "frame-content";
+        
+        // Duyệt các phần tử còn lại (bỏ qua phần tử 0 là ID)
+        for (let index = 1; index < parts.length; index++) {
+            let w = parts[index];
             let box;
-            if (index === 0) {
-                // Vị trí [id]
-                box = createDataBox(w, false, false);
-            } else if (index === 3) {
+            if (index === 3) {
                 // Vị trí [code 2fa]
                 box = createDataBox(w, true, true);
             } else {
-                // Vị trí [text]
+                // Vị trí [text] bình thường
                 box = createDataBox(w, true, false);
             }
-            row.appendChild(box);
-        });
-        res.appendChild(row);
+            content.appendChild(box);
+        }
+
+        // Ráp nối các thành phần lại
+        frame.appendChild(header);
+        frame.appendChild(content);
+        res.appendChild(frame);
     });
 }
 
